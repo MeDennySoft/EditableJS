@@ -1,0 +1,154 @@
+<html>
+	<head>
+		<title>PANEL DE REGISTROS</title>
+		<meta name="charset" content="UTF-8">
+		<link rel="stylesheet" href="js/jquery-ui.css">
+		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery-ui.js"></script>
+		<script type="text/javascript" src="js/editable_stable_build11.js"></script>
+		
+		<script type="text/javascript">
+			
+		_(document).done(function(){	
+			// parte del framework editableJS
+							
+			// _([1,2,3]).each(function(i){
+					// console.log(i);
+			// });
+			
+			// _(["carolina","petra", "concha"]).each([
+				// {
+					// at:0,
+					// do:function(i){
+						// console.log("Nombre: " + i);
+					// }
+				// },
+				// {
+					// at:1,
+					// do:function(i){
+						// console.log("Nombre: " + i);
+					// }
+				// }
+			// ]);
+			
+			// _(["carolina","petra", "concha"]).each({
+				// f:function(i){
+					// console.log("Ella es " + i);
+				// },
+				
+				// b:function(j){
+					// console.log("y ella es su amiga " + j);
+				// },
+				
+				// l:function(x){
+					// console.log("por último ella es su madre " + x);
+				// },
+			// });
+			
+			//_("#busqueda").none();
+			//_("#busqueda").msg("hello", false, 0.5, 3000, "addride");
+			
+			// _("#buscar_datos").event("click").forward({
+				// source: 'ajax.php',
+				// data: "job=search&coldata=@[input=radio:$filtro]",
+				// encode:"json",
+				// result:function(x){
+					// _("#tbody").code(iteraDatos(x));	
+				// }
+			// }).post();
+			
+			// _(".editable").event("click").editable("td").send({
+				// source: 'ajax.php',
+				// table: _("@id").domntype,
+				// data: "job=save"
+			// }).post();
+			
+			// funcion creada por nosotros			
+			var iteraDatos = function(x){
+				var acumulador = "";
+				_(x).eachR(function(name, content){
+						if(name === "id"){
+							acumulador+="<tr>";
+						}
+						acumulador+="<td>"+content+"</td>";
+						if(name === "garantia"){
+							acumulador+="</tr>";
+						}
+				});
+				return acumulador;
+			};
+			
+			_().forward({
+				source: 'ajax2.php',
+				data:"data=asas",
+				result:function(x){
+					console.log(x);
+				}
+			}).post();
+			
+			_(".buscar_datos").bindList(["keyup", "keydown"]).fx(function(e){
+				_("#counter").code(_(e.target).dom.value.length);
+			});
+	
+			_(".editable").editable("td").send({
+				source: 'ajax.php',
+				table: _("@id").domntype,
+				data: "job=save"
+			}).post();
+			
+
+			
+			_("#buscar_datos").bindList(["change", {event:"keydown", code:"13"}]).send({
+						source: 'ajax.php',
+						data: "job=search&coldata=@[input=radio:$filtro]",
+						encode:"json",
+						wait:function(){
+							_("#message").msg({select:"#messageBox",
+											   data:"buscando datos..."
+											  }, 1000, 0.2);
+						},
+						result:function(x){
+							_("#tbody").code(iteraDatos(x));		
+						}
+			}).post();
+		});
+	</script>
+	</head>
+	<body>
+		<div id="message" style="opacity:0; visible:hidden;">
+			<div id="messageBox"></div>
+		</div>
+		<div id="busqueda" class="pl">
+				<div id="counter">Contador de letras:</div>
+				<label>Busqueda:</label>
+				<input type="text" id="buscar_datos" name="buscar_datos" placeholder="Termino de busqueda" class="input buscar_datos"/>
+				<input type="radio" name="filtro" value="nni" >NNI
+				<input type="radio" name="filtro" value="serie" checked> SERIE
+				<input type="radio" name="filtro" value="marca"> MARCA
+		</div>
+		<table class="editable table table-striped table-hover table-bordered hidden-xs table-condensed">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>nni</th>
+					<th>serie</th>
+					<th>marca</th>
+					<th>modelo</th>
+					<th>tipo</th>
+					<th>uni_admin</th>
+					<th>coordi</th>
+					<th>division</th>
+					<th>ip</th>
+					<th>usuario</th>
+					<th>telefono</th>
+					<th>garantia</th>
+				</tr>
+			</thead>
+			<tbody id="tbody">
+			</tbody>
+		</table>
+	</body>
+</html>
+
